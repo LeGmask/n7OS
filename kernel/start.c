@@ -11,8 +11,11 @@ void kernel_start(void)
     // lancement des interruptions
     sti();
 
+    console_putbytes("\fHello \nworld !", 16);
+
     // on ne doit jamais sortir de kernel_start
-    while (1) {
+    while (1)
+    {
         // cette fonction arrete le processeur
         hlt();
     }
