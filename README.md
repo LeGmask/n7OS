@@ -60,14 +60,17 @@ Il nous faut des couverts !
 - Compilation : GCC 
   
   ```sudo apt-get install build-essentials```
+  ```sudo pacman -S base-devel```
 
 - Exécution : QEMU
    
   ```sudo apt-get install qemu```
+  ```sudo pacman -S qemu-base qemu-desktop``
 
 - Mise au point : GDB
     
     - ```sudo apt-get install gdb```
+      ```sudo pacman -S gdb```
     - GDB sera connecté à QEMU et permet d'afficher les problèmes potentiels
 
 > [!NOTE]
