@@ -9,7 +9,7 @@ LIBS= lib/lib.o
 
 QEMU = qemu-system-i386
 QEMUOPTS = -cpu pentium -rtc base=localtime -k fr -m 256M  -kernel kernel.bin
-QEMUGDB= -s -S -gdb tcp::1234
+QEMUGDB= -s -S
 
 DIRS=--directory=kernel --directory=boot --directory=bin --directory=lib
 
