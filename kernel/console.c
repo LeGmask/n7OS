@@ -4,15 +4,29 @@
 uint16_t *scr_tab;
 int cursor;
 
-void init_console()
+void scrollup()
 {
-    scr_tab = (uint16_t *)SCREEN_ADDR;
-    cursor = 0;
+    for (int i = 0; i < VGA_WIDTH * (VGA_HEIGHT - 1); i++)
+    {
+        scr_tab[i] = scr_tab[i + VGA_WIDTH];
+    }
+
+    // we clear the last line
+    for (int i = VGA_WIDTH * (VGA_HEIGHT - 1); i < VGA_WIDTH * VGA_HEIGHT; i++)
+    {
+        scr_tab[i] = CHAR_COLOR << 8 | ' ';
+    }
 }
 
 void seak_cursor(int count)
 {
-    cursor = (cursor + count) % (80 * VGA_HEIGHT + VGA_WIDTH);
+    cursor = cursor + count;
+
+    if (cursor >= VGA_WIDTH * VGA_HEIGHT)
+    {
+        scrollup();
+        cursor = cursor - VGA_WIDTH;
+    }
 }
 
 void seak_cursor_at(int column, int line)
@@ -32,11 +46,11 @@ int get_cursor_column()
 
 void clean_screen()
 {
-    for (int i = 0; i < 80 * VGA_HEIGHT + VGA_WIDTH; i++)
+    for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++)
     {
         scr_tab[i] = CHAR_COLOR << 8 | ' ';
     }
-    
+
     seak_cursor_at(0, 0);
 }
 
@@ -45,7 +59,7 @@ void update_cursor()
     outb(0xF, 0x3D4);
     outb(cursor & 255, 0x3D5);
     outb(0xE, 0x3D4);
-    outb(cursor << 8, 0x3D5);
+    outb(cursor >> 8, 0x3D5);
 }
 
 void console_putchar(const char c)
@@ -60,6 +74,7 @@ void console_putchar(const char c)
         break;
     case '\t':
         console_putbytes("       ", 8);
+        seak_cursor(8);
         break;
     case '\f':
         clean_screen();
@@ -86,4 +101,12 @@ void console_putbytes(const char *s, int len)
     {
         console_putchar(s[i]);
     }
+}
+
+void init_console()
+{
+    scr_tab = (uint16_t *)SCREEN_ADDR;
+    cursor = 0;
+    clean_screen();
+    update_cursor();
 }
