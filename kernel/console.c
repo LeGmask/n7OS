@@ -56,10 +56,10 @@ void clean_screen()
 
 void update_cursor()
 {
-    outb(0xF, 0x3D4);
-    outb(cursor & 255, 0x3D5);
-    outb(0xE, 0x3D4);
-    outb(cursor >> 8, 0x3D5);
+    outb(CMD_LOW, PORT_CMD);
+    outb(cursor & 255, PORT_DATA);
+    outb(CMD_HIGH, PORT_CMD);
+    outb(cursor >> 8, PORT_DATA);
 }
 
 void console_putchar(const char c)
