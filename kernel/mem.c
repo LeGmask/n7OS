@@ -1,7 +1,7 @@
 #include <n7OS/mem.h>
 #include <stdio.h>
 
-uint32_t page_bitmap_table[BITMAP_ARRAY_SIZE];
+uint32_t free_page_bitmap_table[BITMAP_ARRAY_SIZE];
 
 /**
  * @brief Marque la page allouée
@@ -12,10 +12,10 @@ uint32_t page_bitmap_table[BITMAP_ARRAY_SIZE];
  */
 void setPage(uint32_t addr)
 {
-    uint32_t offset = addr % 32;
-    uint32_t mask = 1 << offset;
+    uint32_t index = addr / PAGE_SIZE;
+    uint32_t offset = index % 32;
 
-    page_bitmap_table[addr / 32] |= mask;
+    free_page_bitmap_table[index / 32] |= 1 << offset;
 }
 
 /**
@@ -27,10 +27,10 @@ void setPage(uint32_t addr)
  */
 void clearPage(uint32_t addr)
 {
-    uint32_t offset = addr % 32;
-    uint32_t mask = ~(1 << offset);
+    uint32_t index = addr / PAGE_SIZE;
+    uint32_t offset = index % 32;
 
-    page_bitmap_table[addr / 32] &= mask;
+    free_page_bitmap_table[index / 32] &= ~(1 << offset);
 }
 
 /**
@@ -40,13 +40,16 @@ void clearPage(uint32_t addr)
  */
 uint32_t findfreePage()
 {
-    for (uint32_t addr = 0x0; addr < PAGE_COUNT; addr++)
+    for (uint32_t page_idx = 0x0; page_idx < PAGE_COUNT; page_idx++)
     {
-        uint32_t index = addr / PAGE_SIZE;
-        uint32_t offset = index % 32;
+        uint32_t index = page_idx / 32;
+        uint32_t offset = page_idx % 32;
 
-        if (page_bitmap_table[index / 32] & (1 << offset))
-            return addr;
+        if (!(free_page_bitmap_table[index] & (1 << offset)))
+        {
+            setPage(page_idx * PAGE_SIZE);
+            return page_idx * PAGE_SIZE;
+        }
     }
 
     // an error occured, no free page found
@@ -60,7 +63,7 @@ void init_mem()
 {
     for (int i = 0x0; i < BITMAP_ARRAY_SIZE; i++)
     {
-        page_bitmap_table[i] = 0x0;
+        free_page_bitmap_table[i] = 0x0;
     }
 }
 
@@ -72,7 +75,7 @@ void print_mem()
 {
     for (int i = 0; i < BITMAP_ARRAY_SIZE; i++)
     {
-        printf("0x%08x ", page_bitmap_table[i]);
+        printf("0x%08x ", free_page_bitmap_table[i]);
 
         if ((i + 1) % 7 == 0)
             printf("\n");
