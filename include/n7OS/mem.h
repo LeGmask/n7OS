@@ -16,16 +16,21 @@
 #define LAST_MEMORY_INDEX 0xFFFFFF
 
 /**
- * @brief Taille d'une page en mémoire
+ * @brief Taille d'une page en octets
  *
  * Ici, 0x1000 -> 2^10 * 4 = 4096 octets
  */
 #define PAGE_SIZE 0x1000
 
 /**
+ * @brief Taille d'une page en bits
+ */
+#define PAGE_SIZE_BITS PAGE_SIZE * 8
+
+/**
  * @brief Nombre de pages dans la mémoire
  */
-#define PAGE_COUNT LAST_MEMORY_INDEX / PAGE_SIZE
+#define PAGE_COUNT (LAST_MEMORY_INDEX + 1) / PAGE_SIZE
 
 /**
  * @brief Taille du tableau de bitmap contenant l'état des pages
