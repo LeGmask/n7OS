@@ -10,11 +10,11 @@ void kernel_start(void)
 {
     init_console();
     init_kheap();
+    initialise_paging();
 
     // lancement des interruptions
-    sti();
+    // sti();
 
-    initialise_paging();
     print_mem();
 
     // on ne doit jamais sortir de kernel_start
