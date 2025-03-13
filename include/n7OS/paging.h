@@ -30,14 +30,14 @@ typedef union
 {
     struct
     {
-        uint32_t addr : 20;
-        uint16_t RSVD : 9;
-        uint8_t SU : 1;
-        uint8_t RW : 1;
-        uint8_t P : 1;
+        uint32_t P : 1;
+        uint32_t RW : 1;
+        uint32_t SU : 1;
+        uint32_t RSVD : 9;
+        uint32_t page : 20;
     };
     uint32_t value;
-} PDE; // PTE = Page Table Entry
+} PDE; // PDE = Page Directory Entry
 
 /**
  * @brief Un répertoire de page (PageDirectory) est un tableau de descripteurs de page
@@ -52,15 +52,15 @@ typedef union
 {
     struct
     {
-        uint32_t addr : 20;
-        uint8_t AVL : 3;
-        uint8_t RSVD2 : 2;
-        uint8_t D : 1;
-        uint8_t A : 1;
-        uint8_t RSVD1 : 2;
-        uint8_t SU : 1;
-        uint8_t RW : 1;
-        uint8_t P : 1;
+        uint32_t P : 1;
+        uint32_t RW : 1;
+        uint32_t SU : 1;
+        uint32_t RSVD1 : 2;
+        uint32_t A : 1;
+        uint32_t D : 1;
+        uint32_t RSVD2 : 2;
+        uint32_t AVL : 3;
+        uint32_t page : 20;
     };
     uint32_t value;
 } PTE; // PTE = Page Table Entry
@@ -74,9 +74,9 @@ typedef union
 {
     struct
     {
-        uint16_t page_idx : 12;
-        uint16_t table_idx : 10;
-        uint16_t directory_idx : 10;
+        uint32_t page_idx : 12;
+        uint32_t table_idx : 10;
+        uint32_t directory_idx : 10;
     };
     uint32_t value;
 } Virtual_addr;
