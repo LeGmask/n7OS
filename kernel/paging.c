@@ -17,7 +17,7 @@ void initialise_paging()
         directory[idx].page = kmalloc_a(PAGE_SIZE) >> 12;
         directory[idx].P = PRESENT;
         directory[idx].RW = WRITABLE;
-        directory[idx].SU = USERLAND;
+        directory[idx].SU = ~USERLAND;
     }
 
     for (uint32_t i = 0; i < get_stack_top(); i += PAGE_SIZE)
