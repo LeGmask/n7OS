@@ -8,19 +8,19 @@
 
 void kernel_start(void)
 {
-    init_console();
-    init_kheap();
-    initialise_paging();
+	init_console();
+	init_kheap();
+	initialise_paging();
 
-    // lancement des interruptions
-    // sti();
+	// lancement des interruptions
+	// sti();
 
-    print_mem();
+	print_mem();
 
-    // on ne doit jamais sortir de kernel_start
-    while (1)
-    {
-        // cette fonction arrete le processeur
-        hlt();
-    }
+	// on ne doit jamais sortir de kernel_start
+	while (1)
+	{
+		// cette fonction arrete le processeur
+		hlt();
+	}
 }

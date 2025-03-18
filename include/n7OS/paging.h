@@ -28,15 +28,15 @@
  */
 typedef union
 {
-    struct
-    {
-        uint32_t P : 1;
-        uint32_t RW : 1;
-        uint32_t SU : 1;
-        uint32_t RSVD : 9;
-        uint32_t page : 20;
-    };
-    uint32_t value;
+	struct
+	{
+		uint32_t P : 1;
+		uint32_t RW : 1;
+		uint32_t SU : 1;
+		uint32_t RSVD : 9;
+		uint32_t page : 20;
+	};
+	uint32_t value;
 } PDE; // PDE = Page Directory Entry
 
 /**
@@ -50,19 +50,19 @@ typedef PDE *PageDirectory;
  */
 typedef union
 {
-    struct
-    {
-        uint32_t P : 1;
-        uint32_t RW : 1;
-        uint32_t SU : 1;
-        uint32_t RSVD1 : 2;
-        uint32_t A : 1;
-        uint32_t D : 1;
-        uint32_t RSVD2 : 2;
-        uint32_t AVL : 3;
-        uint32_t page : 20;
-    };
-    uint32_t value;
+	struct
+	{
+		uint32_t P : 1;
+		uint32_t RW : 1;
+		uint32_t SU : 1;
+		uint32_t RSVD1 : 2;
+		uint32_t A : 1;
+		uint32_t D : 1;
+		uint32_t RSVD2 : 2;
+		uint32_t AVL : 3;
+		uint32_t page : 20;
+	};
+	uint32_t value;
 } PTE; // PTE = Page Table Entry
 
 /**
@@ -72,13 +72,13 @@ typedef PTE *PageTable;
 
 typedef union
 {
-    struct
-    {
-        uint32_t page_idx : 12;
-        uint32_t table_idx : 10;
-        uint32_t directory_idx : 10;
-    };
-    uint32_t value;
+	struct
+	{
+		uint32_t page_idx : 12;
+		uint32_t table_idx : 10;
+		uint32_t directory_idx : 10;
+	};
+	uint32_t value;
 } Virtual_addr;
 
 /**

@@ -8,7 +8,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,16 +25,20 @@
 
 #include "stdarg.h"
 
-int printf(const char *__format, ...) __attribute__((format (printf, 1, 2)));
-int vprintf(const char *__format, va_list __vl) __attribute__((format (printf, 1, 0)));
-int sprintf(char *__dest, const char *__format, ...) __attribute__((format (printf, 2, 3)));
-int snprintf(char *__dest, unsigned int __size, const char *__format, ...) __attribute__((format (printf, 3, 4)));
-int vsprintf(char *__dest, const char *__format, va_list __vl) __attribute__((format (printf, 2, 0)));
-int vsnprintf(char *__dest, unsigned int __size, const char *__format, va_list __vl) __attribute__((format (printf, 3, 0)));
+int printf(const char *__format, ...) __attribute__((format(printf, 1, 2)));
+int vprintf(const char *__format, va_list __vl) __attribute__((format(printf, 1, 0)));
+int sprintf(char *__dest, const char *__format, ...) __attribute__((format(printf, 2, 3)));
+int snprintf(char *__dest, unsigned int __size, const char *__format, ...) __attribute__((format(printf, 3, 4)));
+int vsprintf(char *__dest, const char *__format, va_list __vl) __attribute__((format(printf, 2, 0)));
+int vsnprintf(char *__dest, unsigned int __size, const char *__format, va_list __vl) __attribute__((format(printf, 3, 0)));
 
-extern void panic(const char *fmt, ...) __attribute__((noreturn, format (printf, 1, 2)));
+extern void panic(const char *fmt, ...) __attribute__((noreturn, format(printf, 1, 2)));
 
-#define BUG() do { panic(__FILE__":%u: BUG !\n", __LINE__); } while (0)
+#define BUG()                                     \
+	do                                            \
+	{                                             \
+		panic(__FILE__ ":%u: BUG !\n", __LINE__); \
+	} while (0)
 
 #ifdef NDEBUG
 
@@ -43,9 +47,7 @@ extern void panic(const char *fmt, ...) __attribute__((noreturn, format (printf,
 #else
 
 #define assert(expr) \
-	((void)((expr) ? 0 : \
-		(panic(__FILE__":%u: failed assertion `"#expr"'\n", \
-			__LINE__), 0)))
+	((void)((expr) ? 0 : (panic(__FILE__ ":%u: failed assertion `" #expr "'\n", __LINE__), 0)))
 
 #endif
 
