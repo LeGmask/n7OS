@@ -12,12 +12,12 @@ void initialise_paging()
 	init_mem();
 	directory = (PageDirectory)kmalloc_a(PAGE_SIZE);
 
-	for (int idx = 0; idx < PAGE_SIZE / sizeof(PDE); idx++)
+	for (uint32_t idx = 0; idx < PAGE_SIZE / sizeof(PDE); idx++)
 	{
 		directory[idx].page = kmalloc_a(PAGE_SIZE) >> 12;
 		directory[idx].P = PRESENT;
 		directory[idx].RW = WRITABLE;
-		directory[idx].SU = ~USERLAND;
+		directory[idx].SU = !USERLAND;
 	}
 
 	for (uint32_t i = 0; i < get_stack_top(); i += PAGE_SIZE)
