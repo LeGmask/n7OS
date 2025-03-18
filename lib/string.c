@@ -12,7 +12,6 @@
  */
 #define UCHAR_MAX 255U
 
-
 /*
  * memccpy.c
  *
@@ -28,13 +27,14 @@ void *memccpy(void *dst, const void *src, int c, size_t n)
 	const char *p = src;
 	char ch;
 
-	while (n--) {
+	while (n--)
+	{
 		*q++ = ch = *p++;
 		if (ch == (char)c)
 			return q;
 	}
 
-	return NULL;		/* No instance of "c" found */
+	return NULL; /* No instance of "c" found */
 }
 /*
  * memchr.c
@@ -47,7 +47,8 @@ void *memchr(const void *s, int c, size_t n)
 {
 	const unsigned char *sp = s;
 
-	while (n--) {
+	while (n--)
+	{
 		if (*sp == (unsigned char)c)
 			return (void *)sp;
 		sp++;
@@ -66,7 +67,8 @@ void *memrchr(const void *s, int c, size_t n)
 {
 	const unsigned char *sp = (const unsigned char *)s + n - 1;
 
-	while (n--) {
+	while (n--)
+	{
 		if (*sp == (unsigned char)c)
 			return (void *)sp;
 		sp--;
@@ -85,7 +87,8 @@ int memcmp(const void *s1, const void *s2, size_t n)
 	const unsigned char *c1 = s1, *c2 = s2;
 	int d = 0;
 
-	while (n--) {
+	while (n--)
+	{
 		d = (int)*c1++ - (int)*c2++;
 		if (d)
 			break;
@@ -105,16 +108,16 @@ void *memcpy(void *dst, const void *src, size_t n)
 	char *q = dst;
 #if defined(__i386__)
 	size_t nl = n >> 2;
-	__asm__ __volatile__ ("cld ; rep ; movsl ; movl %3,%0 ; rep ; movsb":"+c" (nl),
-		      "+S"(p), "+D"(q)
-		      :"r"(n & 3));
+	__asm__ __volatile__("cld ; rep ; movsl ; movl %3,%0 ; rep ; movsb" : "+c"(nl),
+																		  "+S"(p), "+D"(q)
+						 : "r"(n & 3));
 #elif defined(__x86_64__)
 	size_t nq = n >> 3;
-	__asm__ __volatile__ ("cld ; rep ; movsq ; movl %3,%%ecx ; rep ; movsb":"+c"
-		      (nq), "+S"(p), "+D"(q)
-		      :"r"((uint32_t) (n & 7)));
+	__asm__ __volatile__("cld ; rep ; movsq ; movl %3,%%ecx ; rep ; movsb" : "+c"(nq), "+S"(p), "+D"(q)
+						 : "r"((uint32_t)(n & 7)));
 #else
-	while (n--) {
+	while (n--)
+	{
 		*q++ = *p++;
 	}
 #endif
@@ -132,24 +135,32 @@ void *memmove(void *dst, const void *src, size_t n)
 	const char *p = src;
 	char *q = dst;
 #if defined(__i386__) || defined(__x86_64__)
-	if (q < p) {
+	if (q < p)
+	{
 		__asm__ __volatile__("cld ; rep ; movsb"
-			     : "+c" (n), "+S"(p), "+D"(q));
-	} else {
+							 : "+c"(n), "+S"(p), "+D"(q));
+	}
+	else
+	{
 		p += (n - 1);
 		q += (n - 1);
 		__asm__ __volatile__("std ; rep ; movsb"
-			     : "+c" (n), "+S"(p), "+D"(q));
+							 : "+c"(n), "+S"(p), "+D"(q));
 	}
 #else
-	if (q < p) {
-		while (n--) {
+	if (q < p)
+	{
+		while (n--)
+		{
 			*q++ = *p++;
 		}
-	} else {
+	}
+	else
+	{
 		p += n;
 		q += n;
-		while (n--) {
+		while (n--)
+		{
 			*--q = *--p;
 		}
 	}
@@ -169,17 +180,18 @@ void *memset(void *dst, int c, size_t n)
 
 #if defined(__i386__)
 	size_t nl = n >> 2;
-	__asm__ __volatile__ ("cld ; rep ; stosl ; movl %3,%0 ; rep ; stosb"
-		      : "+c" (nl), "+D" (q)
-		      : "a" ((unsigned char)c * 0x01010101U), "r" (n & 3));
+	__asm__ __volatile__("cld ; rep ; stosl ; movl %3,%0 ; rep ; stosb"
+						 : "+c"(nl), "+D"(q)
+						 : "a"((unsigned char)c * 0x01010101U), "r"(n & 3));
 #elif defined(__x86_64__)
 	size_t nq = n >> 3;
-	__asm__ __volatile__ ("cld ; rep ; stosq ; movl %3,%%ecx ; rep ; stosb"
-		      :"+c" (nq), "+D" (q)
-		      : "a" ((unsigned char)c * 0x0101010101010101U),
-			"r" ((uint32_t) n & 7));
+	__asm__ __volatile__("cld ; rep ; stosq ; movl %3,%%ecx ; rep ; stosb"
+						 : "+c"(nq), "+D"(q)
+						 : "a"((unsigned char)c * 0x0101010101010101U),
+						   "r"((uint32_t)n & 7));
 #else
-	while (n--) {
+	while (n--)
+	{
 		*q++ = c;
 	}
 #endif
@@ -235,28 +247,37 @@ void *memmem(const void *haystack, size_t n, const void *needle, size_t m)
 	if (m > n || !m || !n)
 		return NULL;
 
-	if (1 != m) {
-		if (x[0] == x[1]) {
+	if (1 != m)
+	{
+		if (x[0] == x[1])
+		{
 			k = 2;
 			l = 1;
-		} else {
+		}
+		else
+		{
 			k = 1;
 			l = 2;
 		}
 
 		j = 0;
-		while (j <= n - m) {
-			if (x[1] != y[j + 1]) {
+		while (j <= n - m)
+		{
+			if (x[1] != y[j + 1])
+			{
 				j += k;
-			} else {
-				if (!memcmp(x + 2, y + j + 2, m - 2)
-				    && x[0] == y[j])
+			}
+			else
+			{
+				if (!memcmp(x + 2, y + j + 2, m - 2) && x[0] == y[j])
 					return (void *)&y[j];
 				j += l;
 			}
 		}
-	} else
-		do {
+	}
+	else
+		do
+		{
 			if (*y == *x)
 				return (void *)y;
 			y++;
@@ -279,7 +300,8 @@ void memswap(void *m1, void *m2, size_t n)
 	char *q = m2;
 	char tmp;
 
-	while (n--) {
+	while (n--)
+	{
 		tmp = *p;
 		*p = *q;
 		*q = tmp;
@@ -307,7 +329,8 @@ char *strcat(char *dst, const char *src)
 
 char *strchr(const char *s, int c)
 {
-	while (*s != (char)c) {
+	while (*s != (char)c)
+	{
 		if (!*s)
 			return NULL;
 		s++;
@@ -326,7 +349,8 @@ char *strrchr(const char *s, int c)
 {
 	const char *found = NULL;
 
-	while (*s) {
+	while (*s)
+	{
 		if (*s == (char)c)
 			found = s;
 		s++;
@@ -348,7 +372,8 @@ int strcmp(const char *s1, const char *s2)
 	unsigned char ch;
 	int d = 0;
 
-	while (1) {
+	while (1)
+	{
 		d = (int)(ch = *c1++) - (int)*c2++;
 		if (d || !ch)
 			break;
@@ -370,7 +395,8 @@ char *strcpy(char *dst, const char *src)
 	const char *p = src;
 	char ch;
 
-	do {
+	do
+	{
 		*q++ = ch = *p++;
 	} while (ch);
 
@@ -409,7 +435,8 @@ size_t strnlen(const char *s, size_t maxlen)
 
 	/* Important: the maxlen test must precede the reference through ss;
 	   since the byte beyond the maximum may segfault */
-	while ((maxlen > 0) && *ss) {
+	while ((maxlen > 0) && *ss)
+	{
 		ss++;
 		maxlen--;
 	}
@@ -427,7 +454,8 @@ char *strncat(char *dst, const char *src, size_t n)
 	const char *p = src;
 	char ch;
 
-	while (n--) {
+	while (n--)
+	{
 		*q++ = ch = *p++;
 		if (!ch)
 			return dst;
@@ -449,14 +477,16 @@ size_t strlcat(char *dst, const char *src, size_t size)
 	const char *p = src;
 	char ch;
 
-	while (bytes < size && *q) {
+	while (bytes < size && *q)
+	{
 		q++;
 		bytes++;
 	}
 	if (bytes == size)
 		return (bytes + strlen(src));
 
-	while ((ch = *p++)) {
+	while ((ch = *p++))
+	{
 		if (bytes + 1 < size)
 			*q++ = ch;
 
@@ -479,7 +509,8 @@ int strncmp(const char *s1, const char *s2, size_t n)
 	unsigned char ch;
 	int d = 0;
 
-	while (n--) {
+	while (n--)
+	{
 		d = (int)(ch = *c1++) - (int)*c2++;
 		if (d || !ch)
 			break;
@@ -499,7 +530,8 @@ char *strncpy(char *dst, const char *src, size_t n)
 	const char *p = src;
 	char ch;
 
-	while (n) {
+	while (n)
+	{
 		n--;
 		*q++ = ch = *p++;
 		if (!ch)
@@ -559,7 +591,7 @@ size_t strspn(const char *s, const char *accept)
 char *strstr(const char *haystack, const char *needle)
 {
 	return (char *)memmem(haystack, strlen(haystack), needle,
-			      strlen(needle));
+						  strlen(needle));
 }
 /*
  * strtok.c
