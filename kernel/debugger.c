@@ -11,9 +11,12 @@ static void write_hex(int line, int col, int length, unsigned long value)
 	char *p = screen_base + ((line - 1) * 160 + (col + length - 1) * 2);
 	char disp[16];
 	int i;
-	for (i=0; i<10; i++) disp[i] = '0' + i;
-	for (i=0; i<6; i++) disp[i + 10] = 'A' + i;
-	while (length-- > 0) {
+	for (i = 0; i < 10; i++)
+		disp[i] = '0' + i;
+	for (i = 0; i < 6; i++)
+		disp[i + 10] = 'A' + i;
+	while (length-- > 0)
+	{
 		p -= 2;
 		*p = disp[value & 15];
 		value >>= 4;
@@ -24,19 +27,23 @@ static void dump_registers(unsigned trapno, unsigned error_code, struct x86_tss 
 {
 	int i, j, k;
 	k = 0;
-	for (i=0; i<25; i++) {
-		for (j=0; j<80; j++) {
-			screen_base[i*160 + j*2] = task_dump_screen[k++];
+	for (i = 0; i < 25; i++)
+	{
+		for (j = 0; j < 80; j++)
+		{
+			screen_base[i * 160 + j * 2] = task_dump_screen[k++];
 		}
 		k++;
 	}
 
-	for (i=0; i<80*25; i++) {
-		j = 2*i + 1;
+	for (i = 0; i < 80 * 25; i++)
+	{
+		j = 2 * i + 1;
 		screen_base[j] = 0x30;
 	}
-	for (i=161; i<239; i++) {
-		j = 2*i + 1;
+	for (i = 161; i < 239; i++)
+	{
+		j = 2 * i + 1;
 		screen_base[j] = 0x34;
 	}
 	write_hex(7, 21, 2, trapno);
@@ -81,26 +88,32 @@ static struct x86_tss *tss_sel_2_tss(unsigned short sel)
 // Called from the assembly handler tasks
 void trap_handler(unsigned trapno, unsigned error_code)
 {
-    unsigned long tr;
-    __asm__ __volatile__("str %%eax" : "=a" (tr));
-    struct x86_tss *t = tss_sel_2_tss(tss_sel_2_tss(tr)->back_link);
+	unsigned long tr;
+	__asm__ __volatile__("str %%eax" : "=a"(tr));
+	struct x86_tss *t = tss_sel_2_tss(tss_sel_2_tss(tr)->back_link);
 
-    char d = 1;
-    char video_mem[4000];
-    memcpy(video_mem, screen_base, sizeof(video_mem));
-    dump_registers(trapno, error_code, t);
-    while (1) {
-        char c = inb(0x60);
-        switch (c) {
-            case 0x39: // SPACE
-                d = 1 - d;
-                if (d) {
-                    dump_registers(trapno, error_code, t);
-                } else {
-                    memcpy(screen_base, video_mem, sizeof(video_mem));
-                }
-                while (inb(0x60) == 0x39);
-                break;
-        }
-    }
+	char d = 1;
+	char video_mem[4000];
+	memcpy(video_mem, screen_base, sizeof(video_mem));
+	dump_registers(trapno, error_code, t);
+	while (1)
+	{
+		char c = inb(0x60);
+		switch (c)
+		{
+		case 0x39: // SPACE
+			d = 1 - d;
+			if (d)
+			{
+				dump_registers(trapno, error_code, t);
+			}
+			else
+			{
+				memcpy(screen_base, video_mem, sizeof(video_mem));
+			}
+			while (inb(0x60) == 0x39)
+				;
+			break;
+		}
+	}
 }

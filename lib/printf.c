@@ -56,9 +56,10 @@ extern void console_putbytes(const char *s, int len);
 
 /* This version of printf is implemented in terms of putchar and puts.  */
 
-#define	PRINTF_BUFMAX	128
+#define PRINTF_BUFMAX 128
 
-struct printf_state {
+struct printf_state
+{
 	char buf[PRINTF_BUFMAX];
 	unsigned int index;
 };
@@ -76,11 +77,10 @@ flush(struct printf_state *state)
 }
 
 static void
-printf_char(arg, c)
-	char *arg;
-	int c;
+	printf_char(arg, c) char *arg;
+int c;
 {
-	struct printf_state *state = (struct printf_state *) arg;
+	struct printf_state *state = (struct printf_state *)arg;
 
 	if ((c == 0) || (c == '\n') || (state->index >= PRINTF_BUFMAX))
 	{
@@ -103,20 +103,19 @@ int vprintf(const char *fmt, va_list args)
 	struct printf_state state;
 
 	state.index = 0;
-	_doprnt(fmt, args, 0, (void (*)())printf_char, (char *) &state);
+	_doprnt(fmt, args, 0, (void (*)())printf_char, (char *)&state);
 
 	if (state.index != 0)
-	    flush(&state);
+		flush(&state);
 
 	/* _doprnt currently doesn't pass back error codes,
 	   so just assume nothing bad happened.  */
 	return 0;
 }
 
-int
-printf(const char *fmt, ...)
+int printf(const char *fmt, ...)
 {
-	va_list	args;
+	va_list args;
 	int err;
 
 	va_start(args, fmt);
@@ -130,14 +129,15 @@ int putchar(int c)
 {
 	char ch = c;
 	console_putbytes(&ch, 1);
-        return (unsigned char)ch;
+	return (unsigned char)ch;
 }
 
 int puts(const char *s)
 {
-        while (*s) {
-                putchar(*s++);
-        }
+	while (*s)
+	{
+		putchar(*s++);
+	}
 	putchar('\n');
-        return 0;
+	return 0;
 }

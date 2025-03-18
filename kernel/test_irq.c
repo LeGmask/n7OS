@@ -4,11 +4,10 @@
 
 extern void handler_IT();
 
-
-void init_irq() {
-
+void init_irq()
+{
 }
 
-void handler_en_C() {
-
+void handler_en_C()
+{
 }
