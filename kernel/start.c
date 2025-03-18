@@ -5,6 +5,7 @@
 #include <n7OS/mem.h>
 #include <n7OS/paging.h>
 #include <n7OS/kheap.h>
+#include <n7OS/handler.h>
 
 void kernel_start(void)
 {
@@ -13,7 +14,11 @@ void kernel_start(void)
 	initialise_paging();
 
 	// lancement des interruptions
-	// sti();
+	sti();
+
+	init_IT_50();
+
+	__asm__("int $50");
 
 	print_mem();
 
