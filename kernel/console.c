@@ -18,10 +18,8 @@ void scrollup()
 	}
 }
 
-void seak_cursor(int count)
+void scrollup_if_needed()
 {
-	cursor = cursor + count;
-
 	if (cursor >= VGA_WIDTH * VGA_HEIGHT)
 	{
 		scrollup();
@@ -29,9 +27,16 @@ void seak_cursor(int count)
 	}
 }
 
+void seak_cursor(int count)
+{
+	cursor = cursor + count;
+	scrollup_if_needed();
+}
+
 void seak_cursor_at(int column, int line)
 {
 	cursor = VGA_WIDTH * line + column;
+	scrollup_if_needed();
 }
 
 int get_cursor_line()
