@@ -132,6 +132,5 @@ void init_console()
 	cursor = 0;
 	clean_screen();
 	draw_header();
-	update_clock(0);
 	update_cursor();
 }
