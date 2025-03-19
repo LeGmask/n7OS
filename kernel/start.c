@@ -15,10 +15,12 @@ void kernel_start(void)
 	initialise_paging();
 
 	// lancement des interruptions
+	init_IT();
 	sti();
 
-	init_IT();
 	init_timer();
+
+
 
 	__asm__("int $50");
 
