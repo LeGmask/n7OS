@@ -5,7 +5,8 @@
 #include <n7OS/mem.h>
 #include <n7OS/paging.h>
 #include <n7OS/kheap.h>
-#include <n7OS/handler.h>
+#include <n7OS/it_handlers.h>
+#include <n7OS/timer.h>
 
 void kernel_start(void)
 {
@@ -16,11 +17,12 @@ void kernel_start(void)
 	// lancement des interruptions
 	sti();
 
-	init_IT_50();
+	init_IT();
+	init_timer();
 
 	__asm__("int $50");
 
-	print_mem();
+	// print_mem();
 
 	// on ne doit jamais sortir de kernel_start
 	while (1)
