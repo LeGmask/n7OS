@@ -37,6 +37,12 @@
 #define TEXT BLACK
 #define CHAR_COLOR (BLINK | BACK | TEXT)
 
+// HEADER
+#define HEADER_SIZE 1
+#define HEADER_BACK (GRAY << 4)
+#define HEADER_TEXT BLACK
+#define HEADER_COLOR (BLINK | HEADER_BACK | HEADER_TEXT)
+
 void init_console();
 
 /*
@@ -44,5 +50,5 @@ void init_console();
  * have to implement it in the kernel and in the user program.
  */
 void console_putbytes(const char *s, int len);
-
+void update_clock(uint32_t timestamp);
 #endif
