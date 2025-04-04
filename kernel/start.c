@@ -7,6 +7,9 @@
 #include <n7OS/kheap.h>
 #include <n7OS/it_handlers.h>
 #include <n7OS/timer.h>
+#include <n7OS/sys.h>
+#include <unistd.h>
+#include <stdio.h>
 
 void kernel_start(void)
 {
@@ -14,15 +17,20 @@ void kernel_start(void)
 	init_kheap();
 	initialise_paging();
 
-	// lancement des interruptions
 	init_IT();
 	sti();
-
 	init_timer();
 
-
+	init_syscall();
 
 	__asm__("int $50");
+
+	if (example() == 1)
+	{
+		printf("Appel systeme example ok \n");
+	}
+
+	// shutdown(1);
 
 	// print_mem();
 
