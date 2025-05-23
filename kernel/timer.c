@@ -1,5 +1,6 @@
 #include <n7OS/timer.h>
 #include <n7OS/console.h>
+#include <n7OS/processus.h>
 #include <stdio.h>
 
 uint32_t timestamp = 0;
@@ -38,11 +39,16 @@ void init_timer()
 
 void tick()
 {
+	outb(0x20, 0x20); // EOI
 	timestamp++;
 
 	if (timestamp % 1000 == 0)
 	{
 		update_clock(timestamp / 1000);
 	}
-	outb(0x20, 0x20); // EOI
+
+	if (timestamp % 10 == 0)
+	{
+		schedule();
+	}
 }

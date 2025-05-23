@@ -10,6 +10,25 @@
 #include <n7OS/sys.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <n7OS/processus.h>
+
+extern void idle();
+
+void test2()
+{
+	while (1)
+	{
+		printf("Hello world 2\n");
+	}
+}
+
+void test()
+{
+	while (1)
+	{
+		printf("Hello world 1\n");
+	}
+}
 
 void kernel_start(void)
 {
@@ -34,10 +53,10 @@ void kernel_start(void)
 
 	// print_mem();
 
+	init_process();
+	spawnProcess("test", test);
+	spawnProcess("test2", test2);
+
 	// on ne doit jamais sortir de kernel_start
-	while (1)
-	{
-		// cette fonction arrete le processeur
-		hlt();
-	}
+	idle();
 }
