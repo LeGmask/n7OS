@@ -105,3 +105,30 @@ void schedule()
 		}
 	}
 }
+
+void ps()
+{
+	printf("%-5s %-16s %-8s\n", "PID", "Name", "State");
+	for (uint32_t idx = 0; idx < NB_PROC_MAX; idx++)
+	{
+		if (isProcess(idx))
+		{
+			printf("%-5d %-16s ", process_table[idx].pid, process_table[idx].name);
+			switch (process_table[idx].state)
+			{
+			case PRET:
+				printf("%-8s\n", "PRET");
+				break;
+			case ELU:
+				printf("%-8s\n", "ELU");
+				break;
+			case BLOQUE:
+				printf("%-8s\n", "BLOQUE");
+				break;
+			default:
+				printf("%-8s\n", "UNKNOWN");
+				break;
+			}
+		}
+	}
+}

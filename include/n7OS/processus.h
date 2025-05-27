@@ -44,4 +44,5 @@ uint32_t get_current_pid();
 void init_process();
 void schedule();
 
+void ps();
 #endif

@@ -12,9 +12,13 @@ void handle_command(const char *command)
 	{
 		printf("Available commands:\n");
 		printf("  help - Show this help message\n");
+		printf("  ps - List all processes\n");
 		printf("  poweroff - Power off the system\n");
 		printf("  clear - Clear the screen\n");
-		printf("  exit - Exit the shell\n");
+	}
+	else if (strcmp(command, "ps") == 0)
+	{
+		ps();
 	}
 	else if (strcmp(command, "poweroff") == 0)
 	{
