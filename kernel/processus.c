@@ -98,7 +98,7 @@ void schedule()
 			process_table[pid].state = PRET;
 			process_table[new_pid].state = ELU;
 
-			printf("Switching to process %d : %s\n", new_pid, process_table[new_pid].name);
+			// printf("Switching to process %d : %s\n", new_pid, process_table[new_pid].name);
 			sti();
 			ctx_sw(process_table[pid].regs, process_table[new_pid].regs);
 			return;

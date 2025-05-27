@@ -6,11 +6,13 @@
 #include <stdio.h>
 
 extern void handler_IT_32();
+extern void handler_IT_33();
 extern void handler_IT_50();
 
 void init_IT()
 {
 	init_irq_entry(32, (uint32_t)handler_IT_32);
+	init_irq_entry(33, (uint32_t)handler_IT_33);
 	init_irq_entry(50, (uint32_t)handler_IT_50);
 }
 

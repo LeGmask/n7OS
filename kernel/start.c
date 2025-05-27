@@ -11,24 +11,11 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <n7OS/processus.h>
+#include <n7OS/keyboard.h>
+#include <n7OS/shell.h>
 
 extern void idle();
 
-void test2()
-{
-	while (1)
-	{
-		printf("Hello world 2\n");
-	}
-}
-
-void test()
-{
-	while (1)
-	{
-		printf("Hello world 1\n");
-	}
-}
 
 void kernel_start(void)
 {
@@ -41,6 +28,7 @@ void kernel_start(void)
 	init_timer();
 
 	init_syscall();
+	init_keyboard();
 
 	__asm__("int $50");
 
@@ -54,8 +42,8 @@ void kernel_start(void)
 	// print_mem();
 
 	init_process();
-	spawnProcess("test", test);
-	spawnProcess("test2", test2);
+	spawnProcess("shell", shell);
+	// spawnProcess("test2", test2);
 
 	// on ne doit jamais sortir de kernel_start
 	idle();

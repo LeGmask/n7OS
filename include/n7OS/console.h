@@ -51,4 +51,5 @@ void init_console();
  */
 void console_putbytes(const char *s, int len);
 void update_clock(uint32_t timestamp);
+void clean_screen();
 #endif

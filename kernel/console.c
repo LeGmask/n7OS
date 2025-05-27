@@ -52,7 +52,7 @@ int get_cursor_column()
 
 void clean_screen()
 {
-	for (int i = HEADER_SIZE; i < VGA_WIDTH * VGA_HEIGHT; i++)
+	for (int i = HEADER_SIZE * VGA_WIDTH; i < VGA_WIDTH * VGA_HEIGHT; i++)
 	{
 		scr_tab[i] = CHAR_COLOR << 8 | ' ';
 	}
