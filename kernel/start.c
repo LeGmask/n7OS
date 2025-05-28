@@ -16,34 +16,46 @@
 
 extern void idle();
 
+void test_process()
+{
+	while (1)
+	{
+		printf("Test process running...\n");
+		for (volatile int i = 0; i < 1000000; i++)
+			; // Busy wait
+	}
+}
 
 void kernel_start(void)
 {
 	init_console();
 	init_kheap();
-	initialise_paging();
+	init_paging();
+	init_keyboard();
+	init_timer();
 
 	init_IT();
 	sti();
-	init_timer();
 
 	init_syscall();
-	init_keyboard();
 
 	__asm__("int $50");
-
 	if (example() == 1)
-	{
-		printf("Appel systeme example ok \n");
-	}
+		printf("Interrupt test: OK!\n");
+
+	printf("Memory test: ");
+	alloc_page_entry(0xa000FFF8, 1, 1);
+	uint32_t *ptr = (uint32_t *)0xa000FFFc;
+	uint32_t test = *ptr;
+	test++;
+	// print_mem();
+	printf("OK!\n");
 
 	// shutdown(1);
 
-	// print_mem();
-
 	init_process();
 	spawnProcess("shell", shell);
-	// spawnProcess("test2", test2);
+	// spawnProcess("test", test_process);
 
 	// on ne doit jamais sortir de kernel_start
 	idle();

@@ -7,11 +7,18 @@ uint8_t buffer[BUFFER_SIZE];
 uint8_t head = 0;
 uint8_t tail = 0;
 
+/**
+ * Initialize the keyboard by configuring the Programmable Interrupt Controller (PIC)
+ */
 void init_keyboard()
 {
 	outb(inb(0x21) & ~0x02, 0x21);
 }
 
+/**
+ * Get a character from the keyboard buffer.
+ * @return The character if available, otherwise 0.
+ */
 char kgetch()
 {
 	if (head == tail)
@@ -22,6 +29,11 @@ char kgetch()
 	return c;
 }
 
+/**
+ * Keyboard interrupt handler.
+ * This function is called when a keyboard interrupt occurs.
+ * It reads the key code from the keyboard encoder and processes it.
+ */
 void keyboard_IT_Handler()
 {
 	outb(0x20, 0x20); // ACK
@@ -29,7 +41,7 @@ void keyboard_IT_Handler()
 
 	if (key_code == SHIFT_PRESSED || key_code == SHIFT_RELEASED)
 	{
-		shift = SHIFT_PRESSED ? 1 : 0;
+		shift = key_code == SHIFT_PRESSED ? 1 : 0;
 		return;
 	}
 
@@ -42,7 +54,7 @@ void keyboard_IT_Handler()
 		return;
 
 	int next = (head + 1) % BUFFER_SIZE;
-	if(next != head)
+	if (next != head)
 	{
 		buffer[head] = c;
 		head = next;

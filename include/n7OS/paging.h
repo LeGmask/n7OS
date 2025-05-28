@@ -85,7 +85,7 @@ typedef union
  * @brief Cette fonction initialise le répertoire de page, alloue les pages de table du noyau
  *        et active la pagination
  */
-void initialise_paging();
+void init_paging();
 
 /**
  * @brief Cette fonction alloue une page de la mémoire physique à une adresse de la mémoire virtuelle

@@ -6,12 +6,19 @@
 #include <string.h>
 #include <stdio.h>
 
+/**
+ * Handles the input command and executes the corresponding action.
+ * @param command The command string to handle.
+ */
 void handle_command(const char *command)
 {
 	if (strcmp(command, "help") == 0)
 	{
 		printf("Available commands:\n");
 		printf("  help - Show this help message\n");
+		printf("  block [pid] - Block a process\n");
+		printf("  unblock  [pid] - Unblock a process\n");
+		printf("  kill [pid] - Kill a process\n");
 		printf("  ps - List all processes\n");
 		printf("  poweroff - Power off the system\n");
 		printf("  clear - Clear the screen\n");
@@ -19,6 +26,24 @@ void handle_command(const char *command)
 	else if (strcmp(command, "ps") == 0)
 	{
 		ps();
+	}
+	else if (strncmp(command, "block ", 6) == 0)
+	{
+		uint32_t pid = atoi(command + 6);
+		blockProcess(pid);
+		printf("Process %d blocked.\n", pid);
+	}
+	else if (strncmp(command, "unblock ", 8) == 0)
+	{
+		uint32_t pid = atoi(command + 8);
+		unblockProcess(pid);
+		printf("Process %d unblocked.\n", pid);
+	}
+	else if (strncmp(command, "kill ", 5) == 0)
+	{
+		uint32_t pid = atoi(command + 5);
+		terminateProcess(pid);
+		printf("Process %d killed.\n", pid);
 	}
 	else if (strcmp(command, "poweroff") == 0)
 	{
@@ -35,6 +60,9 @@ void handle_command(const char *command)
 	}
 }
 
+/**
+ * Reads a command from the keyboard input.
+ */
 char *read_command()
 {
 	static char cmd[256];
@@ -69,6 +97,9 @@ char *read_command()
 	}
 }
 
+/**
+ * The main shell function that runs in a loop, waiting for user commands.
+ */
 void shell()
 {
 	printf("Welcome to the n7OS shell!\n");

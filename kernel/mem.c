@@ -69,7 +69,6 @@ void init_mem()
 
 /**
  * @brief Affiche l'état de la mémoire physique
- *
  */
 void print_mem()
 {

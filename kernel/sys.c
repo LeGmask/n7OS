@@ -7,6 +7,9 @@
 
 extern void handler_syscall();
 
+/**
+ * Initialize the syscall table and the syscall handler.
+ */
 void init_syscall()
 {
 	// ajout de la fonction de traitement de l'appel systeme
@@ -25,6 +28,11 @@ int sys_example()
 	return 1;
 }
 
+/**
+ * Shutdown the system.
+ * @param n If n == 1, power off the system.
+ * @return -1 if the system is powered off, otherwise returns n.
+ */
 int sys_shutdown(int n)
 {
 	if (n == 1)
@@ -36,6 +44,12 @@ int sys_shutdown(int n)
 		return n;
 }
 
+/**
+ * Write a string to the console.
+ * @param s The string to write.
+ * @param len The length of the string.
+ * @return 1 on success.
+ */
 int sys_write(const char *s, int len)
 {
 	console_putbytes(s, len);

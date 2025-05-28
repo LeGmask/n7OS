@@ -7,7 +7,12 @@
 
 PageDirectory directory;
 
-void initialise_paging()
+/**
+ * Setup paging by initializing the page directory and allocating pages.
+ * This function sets up the paging mechanism in the kernel, allowing for
+ * memory management through paging.
+ */
+void init_paging()
 {
 	init_mem();
 	directory = (PageDirectory)kmalloc_a(PAGE_SIZE);
@@ -36,6 +41,16 @@ void initialise_paging()
 	setup_base((uint32_t)directory);
 }
 
+/**
+ * Allocates a page entry in the page table for a given address.
+ * This function maps a virtual address to a physical page, allowing
+ * the kernel to access that page with the specified permissions.
+ * 
+ * @param address       The virtual address to map.
+ * @param is_writeable  If true, the page is writable; otherwise, it is read-only.
+ * @param is_kernel     If true, the page is accessible only by the kernel; otherwise, it is accessible by userland.
+ * @return PageTable    The page table that contains the allocated page entry.
+ */
 PageTable alloc_page_entry(uint32_t address, int is_writeable, int is_kernel)
 {
 	Virtual_addr virtual_addr;
