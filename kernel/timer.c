@@ -5,6 +5,9 @@
 
 uint32_t timestamp = 0;
 
+/**
+ * Synchronize the system timestamp with the RTC.
+ */
 void rtc_sync()
 {
 	outb(0x0, 0x70);
@@ -23,6 +26,9 @@ void rtc_sync()
 	update_clock(timestamp / 1000); // Update clock
 }
 
+/**
+ * Initialize the Programmable Interval Timer (PIT) and synchronize the system clock.
+ */
 void init_timer()
 {
 	// Synchronize timestamp with RTC
@@ -37,6 +43,9 @@ void init_timer()
 	outb(inb(0x21) & 0xfe, 0x21); // Unmask IRQ0
 }
 
+/**
+ * Handle timer ticks and update the system timestamp.
+ */
 void tick()
 {
 	outb(0x20, 0x20); // EOI
