@@ -45,11 +45,21 @@
 
 void init_console();
 
-/*
+/**
  * This is the function called by printf to send its output to the screen. You
  * have to implement it in the kernel and in the user program.
  */
 void console_putbytes(const char *s, int len);
+
+/**
+ * This function update the clock in the header
+ * @param timestamp The timestamp to display in the header.
+ */
 void update_clock(uint32_t timestamp);
+
+/**
+ * This function clear the screen and reset the cursor
+ * position on the top left corner.
+ */
 void clean_screen();
 #endif

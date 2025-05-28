@@ -5,6 +5,14 @@
 uint16_t *scr_tab;
 int cursor;
 
+/**
+ * This function scrolls up the console
+ * It moves all lines up by one, and clears the last line.
+ * Called when we reach the end of the console.asm
+ *
+ * We take care to not scroll the header line, so we start at HEADER_SIZE * VGA_WIDTH
+ * and stop at VGA_WIDTH * (VGA_HEIGHT - 1).
+ */
 void scrollup()
 {
 	for (int i = HEADER_SIZE * VGA_WIDTH; i < VGA_WIDTH * (VGA_HEIGHT - 1); i++)
@@ -19,6 +27,9 @@ void scrollup()
 	}
 }
 
+/**
+ * Trigger a scroll up if the cursor is at the end of the screen.
+ */
 void scrollup_if_needed()
 {
 	if (cursor >= VGA_WIDTH * VGA_HEIGHT)
@@ -28,28 +39,50 @@ void scrollup_if_needed()
 	}
 }
 
+/**
+ * Move the cursor by a certain number of characters.
+ * If the cursor goes beyond the end of the screen, it will scroll up.
+ * @param count The number of characters to move the cursor.
+ */
 void seak_cursor(int count)
 {
 	cursor = cursor + count;
 	scrollup_if_needed();
 }
 
+/**
+ * Move the cursor to a specific column and line.
+ * If the cursor goes beyond the end of the screen, it will scroll up.
+ * @param column The column to move the cursor to.
+ * @param line The line to move the cursor to.
+ */
 void seak_cursor_at(int column, int line)
 {
 	cursor = VGA_WIDTH * line + column;
 	scrollup_if_needed();
 }
 
+/**
+ * Get the current cursor line and column.
+ * @return The current cursor line.
+ */
 int get_cursor_line()
 {
 	return cursor / VGA_WIDTH;
 }
 
+/**
+ * Get the current cursor column.
+ * @return The current cursor column.
+ */
 int get_cursor_column()
 {
 	return cursor % VGA_WIDTH;
 }
 
+/**
+ * Clean the screen by filling it with spaces and resetting the cursor to the header line.
+ */
 void clean_screen()
 {
 	for (int i = HEADER_SIZE * VGA_WIDTH; i < VGA_WIDTH * VGA_HEIGHT; i++)
@@ -59,6 +92,10 @@ void clean_screen()
 	seak_cursor_at(0, HEADER_SIZE);
 }
 
+/**
+ * Update the hardware cursor position.
+ * This function writes the cursor position to the VGA controller.
+ */
 void update_cursor()
 {
 	outb(CMD_LOW, PORT_CMD);
@@ -67,6 +104,12 @@ void update_cursor()
 	outb(cursor >> 8, PORT_DATA);
 }
 
+/**
+ * This function writes a character to the console.
+ * It handles special characters like newline, carriage return, tab, form feed, and backspace.
+ * For other characters, it writes them to the screen and updates the cursor position.
+ * @param c The character to write to the console.
+ */
 void console_putchar(const char c)
 {
 	switch (c)
@@ -100,6 +143,12 @@ void console_putchar(const char c)
 	update_cursor();
 }
 
+/**
+ * This function writes a string to the console.
+ * It calls console_putchar for each character in the string.
+ * @param s The string to write to the console.
+ * @param len The length of the string.
+ */
 void console_putbytes(const char *s, int len)
 {
 	for (int i = 0; i < len; i++)
@@ -108,6 +157,10 @@ void console_putbytes(const char *s, int len)
 	}
 }
 
+/**
+ * Draw the header line at the top of the console.
+ * It fills the first line with spaces and sets the color to HEADER_COLOR.
+ */
 void draw_header()
 {
 	for (int i = 0; i < VGA_WIDTH; i++)
@@ -116,6 +169,9 @@ void draw_header()
 	}
 }
 
+/**
+ * Update the header content with the updated time.
+ */
 void update_clock(uint32_t timestamp)
 {
 	char header[15];
@@ -126,6 +182,11 @@ void update_clock(uint32_t timestamp)
 	}
 }
 
+/**
+ * Setup the console.asm
+ * It initializes the screen pointer, sets the cursor to 0,
+ * clears the screen, draws the header, and updates the cursor.
+ */
 void init_console()
 {
 	scr_tab = (uint16_t *)SCREEN_ADDR;
